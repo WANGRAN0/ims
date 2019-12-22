@@ -1,0 +1,10 @@
+.layui-carousel .layui-form .layui-form-item .max-height{
+    max-height: 37px;
+}
+.layui-inline i{
+    position: fixed;
+    margin-top: -12px;
+}
+.layui-form-item #pwr,#wr,#rpwr {
+    margin-left: -12px;
+}

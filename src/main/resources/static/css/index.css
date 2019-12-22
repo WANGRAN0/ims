@@ -1,0 +1,53 @@
+body{
+	background: url("https://open.saintic.com/api/bingPic/") no-repeat center;
+	overflow: hidden;
+	background-size: cover;
+	background-attachment: fixed;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+.login-back{
+	width: 390px;
+	height: 350px;
+	left: 50%;
+	top: 50%;
+	margin-left: -195px;
+	margin-top: -160px;
+	position: absolute;
+	background:rgba(255,255,255,0.8);
+	
+}
+.login-main{
+	width: 300px;
+	height: 300px;
+	margin-left: 45px;
+	margin-right: 45px;
+	margin-top: 30px;
+	}
+hr{margin-top: 20px;}
+.fl{
+	display: block;
+	float: left;
+}
+.fr{
+	display: block;
+	float: right;
+}
+.login-main .layui-elip{
+	text-align: center;
+	text-indent: 30px;
+	letter-spacing: 30px;
+	font-size: 37px;
+	color: #333;
+	margin-bottom: 10px;
+}
+.login-main .layui-form .layui-form-item .layui-input-inline{
+	width: 100%;
+}
+.login-main .layui-form .layui-input-inline {
+	width: 100%;
+}
+.login-main .layui-form .layui-input-inline .layui-btn{
+	width: 100%;
+}
