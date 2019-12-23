@@ -95,13 +95,13 @@
                     <div>
                         <form class="layui-form" style="margin: 0 auto;max-width: 460px;padding-top: 40px;">
                             <!--基本信息-->
-                            <div class="layui-form-item" >
+                            <div class="layui-form-item">
                                 <label class="layui-form-label">姓名:</label>
                                 <div class="layui-input-block">
                                     <input type="text" class="layui-input" id="name">
                                 </div>
                             </div>
-                            <div class="layui-form-item" >
+                            <div class="layui-form-item">
                                 <label class="layui-form-label">性别:</label>
                                 <div class="layui-input-block">
                                     <input type="radio" name="sex" title="男" value="男" checked>
@@ -111,23 +111,54 @@
                             <div class="layui-form-item">
                                 <label class="layui-form-label">民族:</label>
                                 <div class="layui-input-block">
-                                    <select name="nation">
-
+                                    <select name="nation" id="nation" lay-verify="">
                                     </select>
                                 </div>
                             </div>
-                            <div class="layui-form-item" >
+                            <div class="layui-form-item">
                                 <label class="layui-form-label">出生日期:</label>
                                 <div class="layui-input-block">
                                     <input type="text" class="layui-input" id="birth">
                                 </div>
                             </div>
 
+                            <!--三级地址联动-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">省:</label>
+                                <div class="layui-input-block">
+                                    <select name="province" id="province" lay-filter="province">
+
+                                    </select>
+                                </div>
+
+                                <label class="layui-form-label">市:</label>
+                                <div class="layui-input-block">
+                                    <select name="city" id="city" lay-filter="city">
+
+                                    </select>
+
+                                </div>
+
+                                <label class="layui-form-label">县/区:</label>
+                                <div class="layui-input-block">
+                                    <select name="area" id="area">
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">联系方式:</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="phone" class="layui-input">
+                                </div>
+                            </div>
+
                             <div class="layui-form-item">
                                 <div class="layui-input-block">
-                                    <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                    <button type="button" class="layui-btn layui-btn-primary pre ">上一步</button>
                                     <button class="layui-btn" lay-submit lay-filter="formStep2">
-                                        &emsp;确认入款&emsp;
+                                        &emsp;确认信息&emsp;
                                     </button>
                                 </div>
                             </div>
@@ -138,13 +169,13 @@
                             <i class="layui-icon layui-circle"
                                style="color: white;font-size:30px;font-weight:bold;background: #52C41A;padding: 20px;line-height: 80px;">&#xe605;</i>
                             <div style="font-size: 24px;color: #333;font-weight: 500;margin-top: 30px;">
-                                入款成功
+                                注册成功
                             </div>
-                            <div style="font-size: 14px;color: #666;margin-top: 20px;">预计两小时到账</div>
+                            <div style="font-size: 14px;color: #666;margin-top: 20px;">3秒后自动跳转登录界面</div>
                         </div>
                         <div style="text-align: center;margin-top: 50px;">
                             <button class="layui-btn next">再入一笔</button>
-                            <button class="layui-btn layui-btn-primary">查看账单</button>
+                            <button class="layui-btn layui-btn-primary">去登陆</button>
                         </div>
                     </div>
                 </div>
@@ -157,7 +188,7 @@
 <script>
     layui.config({
         base: 'plugin/step-lay/'
-    }).use(['form', 'step','laydate'], function () {
+    }).use(['form', 'step', 'laydate'], function () {
         var psdsame = 0;
         var $ = layui.$
             , form = layui.form
@@ -192,8 +223,6 @@
                     if (data == 1) {
                         $('#ri').removeAttr('hidden');
                         $('#wr').attr('hidden', 'hidden');
-
-
                     } else {
                         $('#wr').removeAttr('hidden');
                         $('#ri').attr('hidden', 'hidden');
@@ -205,58 +234,117 @@
         //正则表达式判断密码是否符合规范
         $("#password").blur(function () {
             var reg = /^[A-Za-z0-9]+$/;
-            if(!($('#password').val().match(reg))){
+            if (!($('#password').val().match(reg))) {
                 //layer.msg('请输入合法密码');
                 $('#pwr').removeAttr('hidden');
-                $('#pri').attr('hidden','hidden');
+                $('#pri').attr('hidden', 'hidden');
                 layer.msg('请输入合法密码');
-            }else {
+            } else {
                 $('#pri').removeAttr('hidden');
-                $('#pwr').attr('hidden','hidden');
+                $('#pwr').attr('hidden', 'hidden');
             }
         });
         //验证两次密码是否一致   不一致不允许跳转
-        $('#psd').blur(function() {
-            if($('#password').val() != $('#psd').val()){
+        $('#psd').blur(function () {
+            if ($('#password').val() != $('#psd').val()) {
                 $('#rpwr').removeAttr('hidden');
-                $('#rpri').attr('hidden','hidden');
+                $('#rpri').attr('hidden', 'hidden');
                 psdsame = 0;
                 layer.msg('两次输入密码不一致!');
-            }else {
+            } else {
                 psdsame = 1;
                 $('#rpri').removeAttr('hidden');
-                $('#rpwr').attr('hidden','hidden');
-            };
+                $('#rpwr').attr('hidden', 'hidden');
+            }
+            ;
         });
         //时间选择器
         laydate.render({
-            elem:'#birth'
+            elem: '#birth',
+            trigger: 'click'
+        });
+        //预加载 民族和省
+        $(function () {
+            $.ajax({
+                type: 'GET',
+                url: 'nation',
+                success: function (nations) {
+                    var data = JSON.parse(nations);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#nation").append("<option value='" + data[i].id + "'>" + data[i].nation + "</option>");
+                    }
+                    $("#nation option:first").prop("selected",'selected');
+                    // form.render();
+                }
+            })
+            $.ajax({
+                type: 'GET',
+                url: 'province',
+                success: function (provinces) {
+                    var data = JSON.parse(provinces);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#province").append("<option value='" + data[i].id + "'>" + data[i].cityname + "</option>");
+                    }
+                    $("#province option:first").addClass("layui-form-selected");
+                    form.render();
+                }
+            })
+        });
+        //省发生改变
+        form.on('select(province)', function () {
+            var province = $("#province").find(":checked").attr('value');
+            $("#city").empty();
+            $.ajax({
+                type: 'GET',
+                url: 'city',
+                data: {id: province},
+                success: function (citys) {
+                    var data = JSON.parse(citys);
+                    for (var i = 0; i < data.length; i++) {
+                        $("#city").append("<option value='" + data[i].id + "'>" + data[i].cityname + "</option>");
+                    }
+                    $("#city option:first").addClass("layui-form-selected");
+
+                    //市发生变化
+                    var city = $("#city").find(":checked").attr('value');
+                    $("#area").empty();
+                    $.ajax({
+                        type: 'GET',
+                        url: 'city',
+                        data: {id: city},
+                        success: function (areas) {
+                            var data = JSON.parse(areas);
+                            for (var i = 0; i < data.length; i++) {
+                                $("#area").append("<option value='" + data[i].id + "'>" + data[i].cityname + "</option>");
+                            }
+                            $("#area option:first").addClass("layui-form-selected");
+                            form.render();
+                        }
+                    })
+                    form.render();
+                }
+
+            })
         })
 
+        //手机号码正则
+        $("#phone").blur(function () {
+            var reg = /^1(3|4|5|7|8)\d{9}$/;
+            if ($('#phone').val() != ""){
+                if (!($('#phone').val().match(reg))) {
+                    //layer.msg('请输入合法密码');
+                    layer.msg('请输入合法密码');
+                }
+            }
+        });
 
         form.on('submit(formStep)', function (data) {
             var status = $('input:input:checked').val();
-            //添加界面  根据不同的身份
-            if(status == 1){
-                //学生界面
 
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-            if (psdsame == 0){
+            if (psdsame == 0) {
                 layer.msg("请填写完成进行下一步");
             }
-            if (psdsame == 1){
+            if (psdsame == 1) {
                 step.next('#stepForm');
             }
 
